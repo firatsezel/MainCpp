@@ -39,42 +39,59 @@ struct DOS_Header
 
 DOS_Header exeh;
 
-//FONKSIYONLAR STRING DONMEMELI UNSIGNED CHAR DONMELI YA DA UNSIGNED INT DONMELI
-string readUnBoundedBytes(int beginOff, int endOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + endOff);
-    return str;
+unsigned char* readUnBoundedBytes(int beginOff, int endOff, vector<unsigned char>& buf){
+    vector<unsigned char> uBoundedByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + endOff);
+    exef.exOff += endOff;
+
+    return reinterpret_cast<unsigned char*>(uBoundedByteBuf.data());
+}
+
+unsigned char* readByte(DOS_Header exef, vector<unsigned char>& buf){
+
+    vector<unsigned char> oneByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 1);
+    exef.exOff += 1;
+
+    return reinterpret_cast<unsigned char*>(oneByteBuf.data());
 }
 
 unsigned char* read2Bytes(DOS_Header exef, vector<unsigned char>& buf){
-    //string str(buf.begin() + beginOff, buf.begin() + beginOff + 2);
-    /*copy(buf.begin() + beginOff,
-                  buf.begin() + beginOff + 2,
-                  std::ostream_iterator<unsigned int>(cout << hex));*/
 
     vector<unsigned char> twoByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 2);
-    exef.exOff += 1;
+    exef.exOff += 2;
 
-    return reinterpret_cast<unsigned char*>(twoByteBuf.data());;
+    return reinterpret_cast<unsigned char*>(twoByteBuf.data());
 }
 
-string read4Bytes(int beginOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + 4);
-    return str;
+unsigned char* read4Bytes(DOS_Header exef, vector<unsigned char>& buf){
+
+    vector<unsigned char> fourByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 4);
+    exef.exOff += 4;
+
+    return reinterpret_cast<unsigned char*>(fourByteBuf.data());
 }
 
-string read8Bytes(int beginOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + 8);
-    return str;
+unsigned char* read8Bytes(DOS_Header exef, vector<unsigned char>& buf){
+
+    vector<unsigned char> eightByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 8);
+    exef.exOff += 8;
+
+    return reinterpret_cast<unsigned char*>(eightByteBuf.data());
 }
 
-string read16Bytes(int beginOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + 16);
-    return str;
+unsigned char* read16Bytes(DOS_Header exef, vector<unsigned char>& buf){
+
+    vector<unsigned char> oneSixByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 16);
+    exef.exOff += 16;
+
+    return reinterpret_cast<unsigned char*>(oneSixByteBuf.data());
 }
 
-string read32Bytes(int beginOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + 32);
-    return str;
+unsigned char* read32Bytes(DOS_Header exef, vector<unsigned char>& buf){
+
+    vector<unsigned char> threeTwoByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 32);
+    exef.exOff += 32;
+
+    return reinterpret_cast<unsigned char*>(threeTwoByteBuf.data());
 }
 
 
