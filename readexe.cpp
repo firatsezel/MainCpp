@@ -34,6 +34,7 @@ struct DOS_Header
      short oem_info;
      short reserved2[10];
      long  e_lfanew;
+     unsigned int exOff;
  };
 
 DOS_Header exeh;
@@ -44,15 +45,16 @@ string readUnBoundedBytes(int beginOff, int endOff, vector<unsigned char>& buf){
     return str;
 }
 
-string read2Bytes(int beginOff, vector<unsigned char>& buf){
-    string str(buf.begin() + beginOff, buf.begin() + beginOff + 2);
-     /*string str = "";
-    copy(buf.begin() + beginOff,
+unsigned char* read2Bytes(DOS_Header exef, vector<unsigned char>& buf){
+    //string str(buf.begin() + beginOff, buf.begin() + beginOff + 2);
+    /*copy(buf.begin() + beginOff,
                   buf.begin() + beginOff + 2,
                   std::ostream_iterator<unsigned int>(cout << hex));*/
 
+    vector<unsigned char> twoByteBuf(buf.begin() + exef.exOff, buf.begin() + + exef.exOff + 2);
+    exef.exOff += 1;
 
-    return str;
+    return reinterpret_cast<unsigned char*>(twoByteBuf.data());;
 }
 
 string read4Bytes(int beginOff, vector<unsigned char>& buf){
@@ -86,11 +88,16 @@ int readSignature(vector<unsigned char>& buf){
 
 void readDosHeader(vector<unsigned char>& buf, DOS_Header exeh){
 
-    //exeh.lastsize = boost::lexical_cast<short> (read2Bytes(2, buf));
-   /* std::stringstream ss(read2Bytes(2, buf));
+    //exeh.lastsize = boost::lexical_cast<short> ();
+    std::stringstream ss;
 
-    ss >> exeh.lastsize;*/
-    cout << read2Bytes(2, buf);
+    unsigned char * data = read2Bytes(exeh, buf);
+
+    for(int i=0; i<2; ++i)
+        ss << hex << (unsigned int)data[i];
+    string mystr = ss.str();
+
+    cout << mystr;
 }
 
 int main (int argc, char *argv[])
@@ -102,9 +109,9 @@ int main (int argc, char *argv[])
     std::istream_iterator<unsigned char> begin(fd), end;
     std::vector<unsigned char> buffer(begin, end);
 
-    //if(readSignature(buffer)) {  }
+    if(readSignature(buffer)) { readDosHeader(buffer, exeh); }
 
-    readDosHeader(buffer, exeh);
+
 
     /*std::copy(buffer.begin(),
               buffer.end(),
